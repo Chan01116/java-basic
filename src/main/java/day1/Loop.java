@@ -24,10 +24,11 @@ public class Loop {
         //for
 
 
-    for(int count3 = 0; count3 < 10; count3++) {
-            System.out.println("화이팅");}
+        for (int count3 = 0; count3 < 10; count3++) {
+            System.out.println("화이팅");
+        }
 
-        for(int i = 1; 1 <= 100; i++) {
+        for (int i = 1; i <= 100; i++) {
             System.out.println(i);
         }
 

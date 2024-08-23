@@ -29,9 +29,7 @@ public class Exam5 {
         int time = 74;
         int score = 0;
 
-        for(int ) {
 
-        }
 
 
         // 출력 : 4
