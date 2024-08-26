@@ -28,6 +28,9 @@ public class Exam5 {
 
         int time = 74;
         int score = 0;
+        for (int t = time; t < 90; t += 5) {
+            score++;}
+        System.out.println("A팀의 최종 득점은 " + score + "점입니다.");
 
 
 
@@ -44,5 +47,8 @@ public class Exam5 {
         int a = 12;
         int b = 5;
 
+
+        }
+
     }
-}
+
