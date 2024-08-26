@@ -41,7 +41,7 @@ public class InputExam2 {
             if (num == 5) {
                 break;
             }
-            else {
+            if (num >= 6){
                 System.out.println("그런기능은 존재 하지 않습니다.");
 
             }
