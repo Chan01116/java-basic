@@ -26,11 +26,10 @@ public class Input {
         System.out.print("원하는 단을 입력해 주세요 : ");
         int num1 = sc.nextInt();
         for(int i = 1; i<=9; i++) {
-            for(int j = 1; j <= 9; j++) {
-                System.out.println(i + "X" + j + (num1 * j) );
+                System.out.println(i + "X" + i + num1 * i );
             }
         }
 
 
     }
-}
+
