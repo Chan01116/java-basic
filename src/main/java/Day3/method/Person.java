@@ -4,7 +4,7 @@ public class Person {
 
     // 변수는 상태를 표현한다.
     int age;
-    String name;
+    public String name;
 
     //메서드는  동작(연산)을 표현한다.
 
