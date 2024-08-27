@@ -62,22 +62,22 @@ public class NameApp {
 //                break;
 //
 //        }
-        Scanner sc = new Scanner(System.in);
-
-        while(true) {
-            System.out.print("명령어 : ");
-            String command = sc.nextLine();
-
-            if(command.equals("help")) {
-                System.out.println("help");
-            } else if(command.equals("add")) {
-                System.out.println("add");
-            } else if(command.equals("list")) {
-                System.out.println("list");
-            } else if(command.equals("exit")) {
-                System.out.println("exit");
-            }
-        }
+//        Scanner sc = new Scanner(System.in);
+//
+//        while(true) {
+//            System.out.print("명령어 : ");
+//            String command = sc.nextLine();
+//
+//            if(command.equals("help")) {
+//                System.out.println("help");
+//            } else if(command.equals("add")) {
+//                System.out.println("add");
+//            } else if(command.equals("list")) {
+//                System.out.println("list");
+//            } else if(command.equals("exit")) {
+//                System.out.println("exit");
+//            }
+//        }
 
     }
 }
