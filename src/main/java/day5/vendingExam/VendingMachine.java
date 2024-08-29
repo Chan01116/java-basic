@@ -1,4 +1,4 @@
-package day4.vendingExam;
+package day5.vendingExam;
 
 import java.util.ArrayList;
 
@@ -83,9 +83,24 @@ public class VendingMachine {
     // 값을 세팅 X
     // 연습용으로 하나의 객체만 사용할 때는 미리 넣어 두는 것이 편하니까 그냥 넣어둠
     int remainder = 0;
-    String[] ba = {"콜라", "사이다", "커피"};
-    int[] price = {1000, 1200, 800};
-    int[] stock = {1, 2, 1};
+//    String[] ba = {"콜라", "사이다", "커피"};
+//    int[] price = {1000, 1200, 800};
+//    int[] stock = {1, 2, 1};
+    ArrayList<Integer> price = new ArrayList<>(){{
+        add(1000);
+    add(1200);
+    add(800);
+}};
+    ArrayList<Integer> stock = new ArrayList<>(){{
+        add(1);
+        add(2);
+        add(1);
+    }};
+    ArrayList<String> ba = new ArrayList<>(){{
+        add("콜라");
+        add("사이다");
+        add("커피");
+    }};
 
     public void inputMoney(int money){
 //        remainder = remainder + money; //증감연산
@@ -93,17 +108,18 @@ public class VendingMachine {
         remainder += money; // 위와 같은 코드
     }
     public String selectBeverage(int target){
-        if(stock[target] <= 0){
+        if(stock.get(target) <= 0){
             return "수량이 부족합니다.";
         }
-        if(price[target] > remainder){
+        if(price.get(target) > remainder){
             return "잔액 부족"; // return 하게 되면 메서드는 거기서 종료 더이상 밑으로 안내려감.
         }
 //        remainder = remainder - price[target];
-        remainder -= price[target];//위와 같은 코드
+        remainder -= price.get(target);//위와 같은 코드
 //        stock[target] = stock[target] - 1;
-        stock[target] -= 1; //위와 같은 코드
-        return ba[target];
+//        stock.get(target) -= 1; //위와 같은 코드
+        stock.set(target, stock.get(target) - 1);
+        return ba.get(target);
 
     }
 
@@ -112,8 +128,8 @@ public class VendingMachine {
     }
     public void printBeverages(){
         System.out.println("== 음료수 목록==");
-        for(int  i = 0; i < ba.length; i++){
-            System.out.println( + i + " .  "+ba[i]+" : "+ price[i]+"원, 남은 수량 : " + stock[i]);
+        for(int  i = 0; i < ba.size(); i++){
+            System.out.println( + i + " .  "+ba.get(i)+" : "+ price.get(i)+"원, 남은 수량 : " + stock.get(i));
         }
 
     }

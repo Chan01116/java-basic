@@ -1,4 +1,4 @@
-package day4.vendingExam;
+package day5.vendingExam;
 
 import java.util.Scanner;
 
