@@ -1,5 +1,7 @@
 package day6.vendingExam;
 
+import java.util.ArrayList;
+
 public class VendingMachine {
 //    int remainder = 0;
 //    String[] target = {"콜라", "사이다", "커피"};
@@ -81,9 +83,18 @@ public class VendingMachine {
     // 값을 세팅 X
     // 연습용으로 하나의 객체만 사용할 때는 미리 넣어 두는 것이 편하니까 그냥 넣어둠
     int remainder = 0;
-    String[] ba = {"콜라", "사이다", "커피"};
-    int[] price = {1000, 1200, 800};
-    int[] stock = {1, 2, 1};
+//    String[] ba = {"콜라", "사이다", "커피"};
+//    int[] price = {1000, 1200, 800};
+//    int[] stock = {1, 2, 1};
+    ArrayList<Beverage> beverages = new ArrayList<>();
+    public VendingMachine(){
+        Beverage b1 = new Beverage("콜라", 1000, 1);
+        Beverage b2 = new Beverage("사이다", 1200, 2);
+        Beverage b3 = new Beverage("커피", 800, 1);
+        beverages.add(b1);
+        beverages.add(b2);
+        beverages.add(b3);
+    }
 
     public void inputMoney(int money){
 //        remainder = remainder + money; //증감연산
@@ -91,17 +102,18 @@ public class VendingMachine {
         remainder += money; // 위와 같은 코드
     }
     public String selectBeverage(int target){
-        if(stock[target] <= 0){
+        Beverage beverage = beverages.get(target);///다시 생각====================================
+        if(beverage.stock <= 0){
             return "수량이 부족합니다.";
         }
-        if(price[target] > remainder){
+        if(beverage.price > remainder){
             return "잔액 부족"; // return 하게 되면 메서드는 거기서 종료 더이상 밑으로 안내려감.
         }
 //        remainder = remainder - price[target];
-        remainder -= price[target];//위와 같은 코드
+        remainder -= beverage.price;//위와 같은 코드
 //        stock[target] = stock[target] - 1;
-        stock[target] -= 1; //위와 같은 코드
-        return ba[target];
+        beverage.stock--; //위와 같은 코드
+        return beverage.name;
 
     }
 
@@ -110,8 +122,8 @@ public class VendingMachine {
     }
     public void printBeverages(){
         System.out.println("== 음료수 목록==");
-        for(int  i = 0; i < ba.length; i++){
-            System.out.println( + i + " .  "+ba[i]+" : "+ price[i]+"원, 남은 수량 : " + stock[i]);
+        for(int  i = 0; i < beverages.size(); i++){
+            System.out.println( + i + " .  "+beverages.get(i).name+" : "+ beverages.get(i).price+"원, 남은 수량 : " + beverages.get(i).stock);
         }
 
     }

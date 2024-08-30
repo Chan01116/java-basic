@@ -6,9 +6,6 @@ public class VendingExam {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         VendingMachine vm = new VendingMachine();
-
-
-
         while (true) {
             System.out.print("기능 선택 (1. 돈 투입,  2. 음료 선택,  3.음료 목록 확인, 4.잔액 확인, 5. 사용 종료) : ");
             int menu = Integer.parseInt(sc.nextLine());
