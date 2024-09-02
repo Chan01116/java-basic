@@ -8,20 +8,28 @@ public class LeeCorparation {
 //        int a = 10;
 
         LeeCorp leeCorp = new LeeCorp();
-//        leeCorp.kildong = new Kildong();
-        leeCorp.kildong = new Jinee();
+//        leeCorp.kildong = new Kildong(); //
+        leeCorp.developer = new Kildong();
         leeCorp.kilsoon = new Kilsoon();
 
         leeCorp.java(); // 자바 프로그래밍
         leeCorp.python(); // 파이썬 프로그래밍
     }
 }
+
+
+class JavaDeveloper{
+    public void java(){
+        System.out.println("자바 프로그래밍");
+    }
+}
+
 class LeeCorp{
-//    Kildong kildong;
-    Jinee kildong; //이부분을 교체하기 까지 수시로 변경해야함 번거로움
+    JavaDeveloper developer;
+//    Jinee kildong; //이부분을 교체하기 까지 수시로 변경해야함 번거로움
     Kilsoon kilsoon;
     public void java(){
-        kildong.java();
+        developer.java();
 
     }
     public void python(){
@@ -29,19 +37,20 @@ class LeeCorp{
 
     }
 }
-class Kildong{
+class Kildong extends JavaDeveloper {
     public void java(){
         System.out.println("자바 프로그래밍");
     }
 
 }
-class Kilsoon{
+class Kilsoon {
     public void python(){
         System.out.println("파이썬 프로그래밍");
     }
 
 }
-class Jinee{
-    public void java(){
+class Jinee extends JavaDeveloper {
+    public void java() {
         System.out.println("아주 뛰어난 자바 프로그래밍");
     }
+}
