@@ -25,7 +25,7 @@ class JavaDeveloper{
 }
 
 class LeeCorp{
-    JavaDeveloper developer;
+    JavaDeveloper developer; // int age; 와 같은 개념이라 이해  부모클래스가 가면 자식클래스가 따라 간다고 이해함
 //    Jinee kildong; //이부분을 교체하기 까지 수시로 변경해야함 번거로움
     Kilsoon kilsoon;
     public void java(){
