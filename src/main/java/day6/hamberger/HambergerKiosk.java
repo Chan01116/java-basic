@@ -10,12 +10,18 @@ public class HambergerKiosk {
         ArrayList<Buger> bugerscart = new ArrayList<>();
         ArrayList<Side> sidescart = new ArrayList<>();
         ArrayList<Beverage> beveragescart = new ArrayList<>();
+        int reminder = 0;
 
         while (true) {
             System.out.print("1. 햄버거 선택\n2. 사이드 선택\n3. 음료수 선택\n4. 메뉴 취소\n5. 주문하기\n ======주문목록======\n");
-            System.out.println("버거 : []\\n\" +\n" +
-                    "                    \"사이드 : []\\n음료수 : []\\n총금액 : \\n");
-            System.out.println("무엇을 하시겠습니까? : ");
+            for(int i = 0; i < beveragescart.size(); i++){
+                System.out.print("버거 : " + bugerscart.get(i));
+                System.out.print("사이드 : " + sidescart.get(i));
+                System.out.print("음료수 : " + beveragescart.get(i));
+            }
+            System.out.println("총금액 : ");
+            reminder :
+            System.out.print("무엇을 하시겠습니까? : ");
             int menu = Integer.parseInt(sc.nextLine());
             if (menu == 1) {
                 System.out.println("===햄버거 목록===");
@@ -41,11 +47,12 @@ public class HambergerKiosk {
                 Beverage selectbeverage = ki.getBeverage(target);
                 beveragescart.add(selectbeverage);
                 System.out.println(selectbeverage.name + "을/를 고르셨습니다.");
-            }
+            } else if (menu == 4) {
+                System.out.println("어떤 메뉴를 취소 하시겠습니까?\n1. 버거\n2. 사이드\n3. 음료수");
+                int target = Integer.parseInt(sc.nextLine()) +1;
 
 
-
-            else if (menu == 6) {
+            } else if (menu == 6) {
                 break;
 
             }
