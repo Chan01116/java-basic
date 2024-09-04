@@ -7,8 +7,8 @@ public class Post {
     private String headLines;
     private String contents;
     private int id;
-    private LocalDateTime date;
-    private int hits;
+    private String date;
+    private int hits = 1;
     private ArrayList<String> reply = new ArrayList<>();
 
     public ArrayList<String> getReply() {
@@ -19,11 +19,11 @@ public class Post {
         this.reply = reply;
     }
 
-    public LocalDateTime getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

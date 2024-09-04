@@ -1,15 +1,17 @@
 package quest;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class QusetApp {
     ArrayList<Post> posts = new ArrayList<>();
-    public void run(){
+    ArrayList<User> users = new ArrayList<>();
+    User loggedInUser = null;
+    public void run() {
         Scanner sc = new Scanner(System.in);
         int lastestId = 1;
-        LocalDateTime currentDateTime = LocalDateTime.now();
         while (true) {
             System.out.print("명령어를 입력해 주세요 \nhelp : 기능확인\nadd : 게시글 및 내용작성\nlist : 게시글 및 내용 확인\nupdate : 선택한 게시물수정" +
                     "\ndelete : 선택한 게시물 삭제\nexit : 종료\n");
@@ -26,7 +28,7 @@ public class QusetApp {
                 post.setHeadLines(headline);
                 post.setContents(content);
                 post.setId(lastestId);
-                post.setDate(currentDateTime);
+                post.setDate(currentDateTime());
                 posts.add(post);
                 System.out.println("게시물이 등록되었습니다.");
                 lastestId++;
@@ -34,7 +36,7 @@ public class QusetApp {
 
             } else if (command.equals("list")) {
                 System.out.println("===========");
-                for(Post post : posts){
+                for (Post post : posts) {
                     System.out.printf("번호 : %d\n", post.getId());
                     System.out.printf("제목 : %s\n", post.getHeadLines());
                     System.out.println("==========");
@@ -62,7 +64,7 @@ public class QusetApp {
 //                    continue;
 //                }
                 Post post = findPostById(pix);
-                if(post == null){
+                if (post == null) {
                     System.out.println("없는 게시물 번호입니다.");
                     continue;
                 }
@@ -93,7 +95,7 @@ public class QusetApp {
                 System.out.print("삭제할 게시물 번호 : ");
                 int del = Integer.parseInt(sc.nextLine());
                 Post post = findPostById(del);
-                if(post == null){
+                if (post == null) {
                     System.out.println("없는 게시물 번호입니다.");
                     continue;
 
@@ -118,7 +120,7 @@ public class QusetApp {
                 System.out.print("상세보기 할 게시물 번호를 입력해주세요 : ");
                 int detail = Integer.parseInt(sc.nextLine());
                 Post post = findPostById(detail);
-                if(post == null){
+                if (post == null) {
                     System.out.println("없는 게시물 번호입니다.");
                     continue;
                 }
@@ -128,21 +130,27 @@ public class QusetApp {
                 System.out.println("등록날짜 : " + post.getDate());
                 System.out.println("조회수 : " + post.hit());
                 System.out.println("===========");
-                System.out.println("댓글 : "+ post.getReply());
+                System.out.println("=====댓글=====");
+                for (String reply : post.getReply()) {
+                    System.out.println("-" + reply);
+
+                }
                 while (true) {
                     System.out.print("상세보기 기능을 선택해주세요 (1. 댓글 등록, 2. 추천, 3. 수정, 4. 삭제, 5. 목록으로) : ");
                     int detailTarget = Integer.parseInt(sc.nextLine());
                     if (detailTarget == 1) {
                         System.out.print("댓글을 입력해 주세요 : ");
                         String reply = sc.nextLine();
-                        post.getReply().add(reply + currentDateTime);
+                        post.getReply().add(reply + "                    " + currentDateTime());
                         System.out.println("댓글이 성공적으로 등록되었습니다.");
 
                     } else if (detailTarget == 2) {
-
+                        System.out.println("[추천기능]");
                     } else if (detailTarget == 3) {
+                        System.out.println("[수정기능]");
 
                     } else if (detailTarget == 4) {
+                        System.out.println("[삭제기능]");
 
                     } else if (detailTarget == 5) {
                         System.out.println("상세보기 화면을 빠져나갑니다.");
@@ -184,6 +192,42 @@ public class QusetApp {
                 }
 
 
+            } else if (command.equals("signup")) {
+                System.out.println("===회원 가입을 진행합니다.===");
+                System.out.print("아이디를 입력해주세요 : ");
+                String ID = sc.nextLine();
+                System.out.print("비밀번호를 입력해주세요 : ");
+                String Password = sc.nextLine();
+                System.out.print("닉네임을 입력해주세요 : ");
+                String Nickname = sc.nextLine();
+                User user = new User();
+                user.setID(ID);
+                user.setPassword(Password);
+                user.setNickname(Nickname);
+                users.add(user);
+                System.out.println("===회원가입이 완료되었습니다.===");
+
+            } else if (command.equals("login")) {
+                System.out.println("아이디 : ");
+                String logId = sc.nextLine();
+                System.out.println("비밀번호 : ");
+                String logPassword = sc.nextLine();
+                boolean loggedIn = false;
+                    for (User user : users) {
+                        if (logId.equals(user.getID()) && logPassword.equals(user.getPassword())) {
+                            loggedInUser = user;
+                            System.out.println(user.getNickname() + "님 환영합니다.");
+                            loggedIn = true;
+                            break;
+                        }
+                        if(!loggedIn) {
+                            System.out.println("비밀번호를 틀렸거나 잘못된 회원정보입니다.");
+                        }
+
+                    }
+
+
+
             } else if (command.equals("exit")) {
                 System.out.println("프로그램이 종료됩니다.");
                 break;
@@ -191,16 +235,25 @@ public class QusetApp {
         }
 
 
-
     }
-    public Post findPostById(int id){
-        for(Post post : posts){
-            if(post.getId() == id){
+
+    public Post findPostById(int id) {
+        for (Post post : posts) {
+            if (post.getId() == id) {
                 return post;
 
             }
         }
         return null;
 
+    }
+
+    public String currentDateTime() {
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
+        String formattedDateTime = currentDateTime.format(formatter);
+
+        return formattedDateTime;
     }
 }

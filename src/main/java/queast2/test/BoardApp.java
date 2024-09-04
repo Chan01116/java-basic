@@ -16,10 +16,10 @@ public class BoardApp {
     ArrayList<Post> posts = new ArrayList<>();
 
     // 값의 초기화는 대부분 생성자에서 해주는 것을 권장합니다. 다향한 로직 수행 가능합니다.
-    public BoardApp(){
-        Post p1 = new Post(1, "안녕하세요 반갑습니다. java공부중입니다.", "냉무",currentDateTime(),0);
+    public BoardApp() {
+        Post p1 = new Post(1, "안녕하세요 반갑습니다. java공부중입니다.", "냉무", currentDateTime(), 0);
         Post p2 = new Post(2, "java 질문", "냉무", currentDateTime(), 0);
-        Post p3 = new Post(3, "정처기", "냉무",currentDateTime(), 0);
+        Post p3 = new Post(3, "정처기", "냉무", currentDateTime(), 0);
 
         posts.add(p1);
         posts.add(p2);
@@ -38,7 +38,7 @@ public class BoardApp {
                 System.out.print("게시물 내용을 입력해주세요 : ");
                 String body = sc.nextLine();
                 // 1부터 1씩 증가 -> 고유값 유지하는데 편리
-                Post post = new Post(lastestId, title, body,currentDateTime(),0);
+                Post post = new Post(lastestId, title, body, currentDateTime(), 0);
 
 //                post.setTitle(title);
 //                post.setBody(body);
@@ -55,14 +55,16 @@ public class BoardApp {
 //                    System.out.println("==========");
 //                }
 
-                System.out.println("==========");
-                for (Post post : posts) {
-                    System.out.printf("번호 : %d\n", post.getId());
-                    System.out.printf("제목 : %s\n ", post.getTitle());
-                    System.out.println("==========");
+                printPostList(posts);
+//
+//                System.out.println("==========");
+//                for (Post post : posts) {
+//                    System.out.printf("번호 : %d\n", post.getId());
+//                    System.out.printf("제목 : %s\n ", post.getTitle());
+//                    System.out.println("==========");//메서드로 만든다
 
 
-                }
+//                }
             } else if (command.equals("update")) {
                 System.out.println("수정할 게시물 번호 : ");
                 int targetId = Integer.parseInt(sc.nextLine());
@@ -79,18 +81,23 @@ public class BoardApp {
                 if (post == null) {
                     System.out.println("없는 게시물 번호입니다.");
                     continue;
-
                 }
-
+                System.out.println("수정할 제목 : ");
+                String newTitle = sc.nextLine();
+                System.out.println("수정할 내용 : ");
+                String newBody = sc.nextLine();
+                post.setTitle(newTitle);
+                post.setBody(newBody);// 더확작성 있음
+                System.out.println("수정이 완료되었습니다.");
 //                for (Post post : posts) {
 //                    if (post.getId() == targetId) {
-//                        System.out.println("수정할 제목 : ");
-//                        String newTitle = sc.nextLine();
-//                        System.out.println("수정할 내용 : ");
-//                        String newBody = sc.nextLine();
-//                        post.setTitle(newTitle);
-//                        post.setBody(newBody);// 더확작성 있음
-//                        System.out.println("수정이 완료되었습니다.");
+//
+//
+//
+//
+//
+//
+//
 //                        break;
 //                    }
 //                }
@@ -125,17 +132,36 @@ public class BoardApp {
 
                 Post post = findPostById(targetId);
 
-                if(post == null){
+                if (post == null) {
                     System.out.println("없는 게시물 번호입니다.");
                     continue;
-
                 }
-                System.out.printf("번호 : %d\n");
-                System.out.printf("제목 : ");
-                System.out.printf("내용 : ");
-                System.out.printf("등록날짜 : %s");
+                post.increaseHit();
+                System.out.printf("번호 : %d\n", post.getId());
+                System.out.printf("제목 : %s", post.getTitle());
+                System.out.printf("내용 : %s", post.getBody());
+                System.out.printf("등록날짜 : %s", post.getHit());
 
 
+            } else if (command.equals("search")) {
+                System.out.println("검색 키워드 : ");
+                String keyword = sc.nextLine();
+
+//                System.out.println("==========");
+//                for (Post post : posts) {
+//                    if (post.getTitle().contains(keyword)) {
+//                        System.out.printf("번호 : %d\n", post.getId());
+//                        System.out.printf("제목 : %s\n ", post.getTitle());
+////                        System.out.println("==========");
+//                    }
+//                }
+                ArrayList<Post> searchedPostList = new ArrayList<>();
+                for(Post post : posts){
+                    if(post.getTitle().contains(keyword)){
+                        searchedPostList.add(post);
+                    }
+                }
+                printPostList(searchedPostList);
 
             }
 
@@ -150,27 +176,36 @@ public class BoardApp {
     // 이름 짓는거 정말 정말 중요!!!
     // 리턴타입이라 보이드가 아님
 
-public Post findPostById(int id) {
+    public Post findPostById(int id) {
 
-    // 만약 내가 찾고자 하는 게시물이 없다면?
-    for (Post post : posts) {
-        if (post.getId() == id) {
-            return post; // return을 만나면 메서드는 그 즉시 종료.
+        // 만약 내가 찾고자 하는 게시물이 없다면?
+        for (Post post : posts) {
+            if (post.getId() == id) {
+                return post; // return을 만나면 메서드는 그 즉시 종료.
+            }
         }
+
+        return null; // null은 없다라는 의미
     }
 
-    return null; // null은 없다라는 의미
-}
-public String currentDateTime() {
+    public String currentDateTime() {
 
-    LocalDateTime currentDateTime = LocalDateTime.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
-    String formattedDateTime = currentDateTime.format(formatter);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
+        String formattedDateTime = currentDateTime.format(formatter);
 
-    return formattedDateTime;
-}
+        return formattedDateTime;
+    }
 
+    public void printPostList(ArrayList<Post> targetList) {
+        System.out.println("==========");
+        for (Post post : targetList) {
+            System.out.printf("번호 : %d\n", post.getId());
+            System.out.printf("제목 : %s\n ", post.getTitle());
+            System.out.println("==========");//메서드로 만든다
+        }
 
+    }
 }
 
 
