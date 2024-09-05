@@ -1,19 +1,29 @@
 package quest;
 
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class QusetApp {
-    ArrayList<Post> posts = new ArrayList<>();
-    ArrayList<User> users = new ArrayList<>();
-    User loggedInUser = null;
-    Scanner sc = new Scanner(System.in);
+    private static final String POSTS_FILE = "posts.ser";
+    private static final String USERS_FILE = "users.ser";
+    private ArrayList<Post> posts = new ArrayList<>();
+    private ArrayList<User> users = new ArrayList<>();
+    private User loggedInUser = null;
+    private Scanner sc = new Scanner(System.in);
+    private int lastestId = 1;
+    private int perPage = 3;
+    private int nowPage = 1;
+
 
     public void run() {
-        int lastestId = 1;
+        createFileIfNotExists();
+        loadData();
+
         while (true) {
             String prompt = "";
             if (loggedInUser != null) {
@@ -217,6 +227,9 @@ public class QusetApp {
             } else if (command.equals("sort")) {
                 sort();
 
+            } else if (command.equals("page")) {
+                page();
+
             } else if (command.equals("exit")) {
                 System.out.println("프로그램이 종료됩니다.");
                 break;
@@ -226,8 +239,93 @@ public class QusetApp {
 
     }
 
+    private void page() {
+        while (true){
+            displayNowPage();
+            displayNowPageNevi();
+            System.out.println("페이징 명령어를 입력해주세요 ((1. 이전, 2. 다음, 3. 선택, 4. 뒤로가기): ");
+            int paging = Integer.parseInt(sc.nextLine());
+            if(paging == 1){
+                nowPage--;
+            } else if (paging == 2) {
+                if(nowPage < getTotalPages()){
+                    nowPage++;
+                }
+
+            } else if (paging == 3) {
+                System.out.println("이동하실 페이지 번호를 입력해주세요 : ");
+                int pageNum = Integer.parseInt(sc.nextLine());
+                if(pageNum >= 1 && pageNum <= getTotalPages()){
+                    nowPage = pageNum;
+                }else {
+                    System.out.println("유효하지 않은 페이지 번호입니다.");
+                }
+
+            } else if (paging == 4) {
+                return;
+
+            }else {
+                System.out.println("잘못된 입력입니다.");
+            }
+        }
+    }
+    private void displayNowPage(){
+        int start = (nowPage - 1) * perPage;
+        int end = Math.min(start+perPage, posts.size());
+        System.out.println("===페이지"+ nowPage + "===");
+        for(int i = start; i < end; i++){
+            System.out.println(posts.get(i));
+        }
+    }
+    private void displayNowPageNevi(){
+        System.out.println("페이지 네비게이션:");
+        System.out.println("현재 페이지: " + nowPage);
+        System.out.println("총 페이지 수: " + getTotalPages());
+        System.out.println("1. 이전 페이지");
+        System.out.println("2. 다음 페이지");
+        System.out.println("3. 특정 페이지로 이동");
+        System.out.println("4. 뒤로가기");
+    }
+    private int getTotalPages(){
+        return (int) Math.ceil((double) posts.size() / perPage);
+    }
+
     private void sort() {
-        Collections.sort();
+        System.out.println("정렬 대상을 선택해주세요. (1. 번호, 2. 조회수)");
+        int sortTarget = Integer.parseInt(sc.nextLine());
+        if(sortTarget == 1){
+            System.out.println("정렬 방법을 선택해주세요. (1. 오름차순, 2.내림차순)");
+            int sortDetailTarget = Integer.parseInt(sc.nextLine());
+            if(sortDetailTarget == 1){
+                Collections.sort(posts, Comparator.comparingInt(Post::getId));
+
+            }
+            if(sortDetailTarget == 2){
+                Collections.sort(posts, Comparator.comparingInt(Post::getId).reversed());
+
+            } else {
+                System.out.println("정렬 방법이 잘못되었습니다.");
+                return;}
+
+        } else if (sortTarget == 2) {
+            int sortDetailTarget = Integer.parseInt(sc.nextLine());
+            if(sortDetailTarget == 1){
+                Collections.sort(posts, Comparator.comparingInt(Post::getHits));
+
+            }
+            if(sortDetailTarget == 2){
+                Collections.sort(posts, Comparator.comparingInt(Post::getHits).reversed());
+
+            } else {
+                System.out.println("정렬 방법이 잘못되었습니다.");
+                return;}
+
+
+        }else {
+            System.out.println("그런 기능은 없습니다.");
+            return;
+        }
+        displayPostList();
     }
 
     public Post findPostById(int id) {
@@ -335,5 +433,55 @@ public class QusetApp {
             }
         }
     }
+    public void saveData() {
+        try (ObjectOutputStream oosPosts = new ObjectOutputStream(new FileOutputStream(POSTS_FILE));
+             ObjectOutputStream oosUsers = new ObjectOutputStream(new FileOutputStream(USERS_FILE))) {
+            oosPosts.writeObject(posts);
+            oosUsers.writeObject(users);
+            System.out.println("데이터가 저장되었습니다.");
+        } catch (IOException e) {
+            System.out.println("데이터 저장 중 오류 발생: " + e.getMessage());
+        }
+    }
 
+    public void loadData() {
+        try (ObjectInputStream oisPosts = new ObjectInputStream(new FileInputStream(POSTS_FILE));
+             ObjectInputStream oisUsers = new ObjectInputStream(new FileInputStream(USERS_FILE))) {
+            posts = (ArrayList<Post>) oisPosts.readObject();
+            users = (ArrayList<User>) oisUsers.readObject();
+            System.out.println("데이터가 로드되었습니다.");
+        } catch (FileNotFoundException e) {
+            System.out.println("파일이 존재하지 않습니다. 새로운 데이터로 초기화합니다.");
+            posts = new ArrayList<>();
+            users = new ArrayList<>();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("데이터 로드 중 오류 발생: " + e.getMessage());
+            posts = new ArrayList<>();
+            users = new ArrayList<>();
+        }
+    }
+    private void createFileIfNotExists() {
+        File postsFile = new File(POSTS_FILE);
+        File usersFile = new File(USERS_FILE);
+
+        if (!postsFile.exists()) {
+            try {
+                postsFile.getParentFile().mkdirs(); // 디렉토리 생성
+                postsFile.createNewFile();
+                System.out.println("게시물 데이터 파일이 생성되었습니다.");
+            } catch (IOException e) {
+                System.out.println("게시물 데이터 파일 생성 중 오류 발생: " + e.getMessage());
+            }
+        }
+
+        if (!usersFile.exists()) {
+            try {
+                usersFile.getParentFile().mkdirs(); // 디렉토리 생성
+                usersFile.createNewFile();
+                System.out.println("사용자 데이터 파일이 생성되었습니다.");
+            } catch (IOException e) {
+                System.out.println("사용자 데이터 파일 생성 중 오류 발생: " + e.getMessage());
+            }
+        }
+    }
 }

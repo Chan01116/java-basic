@@ -1,4 +1,4 @@
-package queast2;
+package queast2.post;
 
 public class Post {
     private String title;

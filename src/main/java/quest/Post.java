@@ -1,9 +1,11 @@
 package quest;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Post {
+public class Post implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String headLines;
     private String contents;
     private int id;

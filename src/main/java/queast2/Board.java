@@ -1,10 +1,5 @@
 package queast2;
 
-import queast2.test.BoardApp;
-
-import java.util.ArrayList;
-import java.util.Scanner;
-
 public class Board {
 
 
