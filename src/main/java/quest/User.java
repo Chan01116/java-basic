@@ -1,10 +1,14 @@
 package quest;
 
+import java.util.ArrayList;
+
 public class User {
-    String ID;
-    String Password;
-    String Nickname;
-    int usernum;
+   private String ID;
+    private String Password;
+    private String Nickname;
+    private int usernum;
+
+
 
     public int getUsernum() {
         return usernum;

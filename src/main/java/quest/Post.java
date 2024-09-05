@@ -10,6 +10,34 @@ public class Post {
     private String date;
     private int hits = 1;
     private ArrayList<String> reply = new ArrayList<>();
+    private User author;
+    private int like;
+
+    public ArrayList<User> getLikedUsers() {
+        return likedUsers;
+    }
+
+    public void setLikedUsers(ArrayList<User> likedUsers) {
+        this.likedUsers = likedUsers;
+    }
+
+    private ArrayList<User> likedUsers = new ArrayList<>();
+
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
     public ArrayList<String> getReply() {
         return reply;

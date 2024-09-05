@@ -3,18 +3,24 @@ package quest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class QusetApp {
     ArrayList<Post> posts = new ArrayList<>();
     ArrayList<User> users = new ArrayList<>();
     User loggedInUser = null;
+    Scanner sc = new Scanner(System.in);
+
     public void run() {
-        Scanner sc = new Scanner(System.in);
         int lastestId = 1;
         while (true) {
-            System.out.print("명령어를 입력해 주세요 \nhelp : 기능확인\nadd : 게시글 및 내용작성\nlist : 게시글 및 내용 확인\nupdate : 선택한 게시물수정" +
-                    "\ndelete : 선택한 게시물 삭제\nexit : 종료\n");
+            String prompt = "";
+            if (loggedInUser != null) {
+                prompt = "[" + loggedInUser.getID() + "(" + loggedInUser.getNickname() + ")]";
+
+            }
+            System.out.print("명령어를 입력해 주세요" + prompt + " : ");
             String command = sc.nextLine();
             if (command.equals("help")) {
                 System.out.println("add : 게시글 및 내용작성\nlist : 게시글 및 내용 확인\nupdate : 선택한 게시물수정" +
@@ -29,18 +35,15 @@ public class QusetApp {
                 post.setContents(content);
                 post.setId(lastestId);
                 post.setDate(currentDateTime());
+                post.setAuthor(loggedInUser);  //로그인한 사용자를 작성자로 설정
                 posts.add(post);
                 System.out.println("게시물이 등록되었습니다.");
                 lastestId++;
 
 
             } else if (command.equals("list")) {
-                System.out.println("===========");
-                for (Post post : posts) {
-                    System.out.printf("번호 : %d\n", post.getId());
-                    System.out.printf("제목 : %s\n", post.getHeadLines());
-                    System.out.println("==========");
-                }
+                displayPostList();
+
 //                for (int i = 0; i < posts.size(); i++) {
 //                    System.out.printf("번호 : %d\n", i + 1);
 //                    System.out.printf("제목 : %s\n ", posts.get(i).getHeadLines());
@@ -68,6 +71,11 @@ public class QusetApp {
                     System.out.println("없는 게시물 번호입니다.");
                     continue;
                 }
+                if (!post.getAuthor().equals(loggedInUser)) {
+                    System.out.println("자신의 게시물만 수정할수 있습니다.");
+                    continue;
+
+                }
                 System.out.print("새로운 게시물 제목을 입력해 주세요 : ");
                 String newheadline = sc.nextLine();
                 System.out.print("새로운 게시물 내용을 입력해 주세요 : ");
@@ -75,6 +83,7 @@ public class QusetApp {
                 post.setHeadLines(newheadline);
                 post.setContents(newcontent);
                 System.out.println("수정이 완료되었습니다.");
+                displayPostDetail(post);
                 continue;
 //                for (Post post : posts) {
 //                    if (post.getId() == pix) {
@@ -100,8 +109,8 @@ public class QusetApp {
                     continue;
 
                 }
-                posts.remove(post);
-                System.out.println("삭제가 완료되었습니다.");
+//                posts.remove(post);
+//                System.out.println("삭제가 완료되었습니다.");
 //                if (del < 1 || del >= posts.size()) {
 //                    System.out.println("없는 게시물 번호입니다.");
 //                    continue;
@@ -114,6 +123,19 @@ public class QusetApp {
 //                    }
 //
 //                }
+                if (!post.getAuthor().equals(loggedInUser)) {
+                    System.out.println("자신의 게시물만 삭제할 수있습니다.");
+                    continue;
+
+                }
+                System.out.println("정말 게시물을 삭제하시겠습니까? (y/n) : ");
+                String confirmation = sc.nextLine();
+                if (confirmation.equals("y")) {
+                    posts.remove(post);
+                    System.out.println(loggedInUser.getNickname() + "님의 " + post.getId() + "번의 게시물을 삭제 했습니다.");
+                    displayPostList();
+
+                }
 
 
             } else if (command.equals("detail")) {
@@ -124,43 +146,8 @@ public class QusetApp {
                     System.out.println("없는 게시물 번호입니다.");
                     continue;
                 }
-                System.out.println("===========");
-                System.out.println("제목 : " + post.getHeadLines());
-                System.out.println("내용 : " + post.getContents());
-                System.out.println("등록날짜 : " + post.getDate());
-                System.out.println("조회수 : " + post.hit());
-                System.out.println("===========");
-                System.out.println("=====댓글=====");
-                for (String reply : post.getReply()) {
-                    System.out.println("-" + reply);
+                displayPostDetail(post);
 
-                }
-                while (true) {
-                    System.out.print("상세보기 기능을 선택해주세요 (1. 댓글 등록, 2. 추천, 3. 수정, 4. 삭제, 5. 목록으로) : ");
-                    int detailTarget = Integer.parseInt(sc.nextLine());
-                    if (detailTarget == 1) {
-                        System.out.print("댓글을 입력해 주세요 : ");
-                        String reply = sc.nextLine();
-                        post.getReply().add(reply + "                    " + currentDateTime());
-                        System.out.println("댓글이 성공적으로 등록되었습니다.");
-
-                    } else if (detailTarget == 2) {
-                        System.out.println("[추천기능]");
-                    } else if (detailTarget == 3) {
-                        System.out.println("[수정기능]");
-
-                    } else if (detailTarget == 4) {
-                        System.out.println("[삭제기능]");
-
-                    } else if (detailTarget == 5) {
-                        System.out.println("상세보기 화면을 빠져나갑니다.");
-                        break;
-
-                    } else {
-                        System.out.println("알수 없는 명령어 입니다.");
-                        continue;
-                    }
-                }
 
 //                if (detail < 1 || detail > posts.size()) {
 //                    System.out.println("없는 게시물 번호입니다.");
@@ -213,20 +200,22 @@ public class QusetApp {
                 System.out.println("비밀번호 : ");
                 String logPassword = sc.nextLine();
                 boolean loggedIn = false;
-                    for (User user : users) {
-                        if (logId.equals(user.getID()) && logPassword.equals(user.getPassword())) {
-                            loggedInUser = user;
-                            System.out.println(user.getNickname() + "님 환영합니다.");
-                            loggedIn = true;
-                            break;
-                        }
-                        if(!loggedIn) {
-                            System.out.println("비밀번호를 틀렸거나 잘못된 회원정보입니다.");
-                        }
-
+                for (User user : users) {
+                    if (logId.equals(user.getID()) && logPassword.equals(user.getPassword())) {
+                        loggedInUser = user;
+                        System.out.println(user.getNickname() + "님 환영합니다.");
+                        loggedIn = true;
+                        break;
+                    }
+                    if (!loggedIn) {
+                        System.out.println("비밀번호를 틀렸거나 잘못된 회원정보입니다.");
                     }
 
+                }
 
+
+            } else if (command.equals("sort")) {
+                sort();
 
             } else if (command.equals("exit")) {
                 System.out.println("프로그램이 종료됩니다.");
@@ -235,6 +224,10 @@ public class QusetApp {
         }
 
 
+    }
+
+    private void sort() {
+        Collections.sort();
     }
 
     public Post findPostById(int id) {
@@ -256,4 +249,91 @@ public class QusetApp {
 
         return formattedDateTime;
     }
+    public void displayPostList(){
+        System.out.println("===========");
+        for (Post post : posts) {
+            System.out.printf("번호 : %d\n", post.getId());
+            System.out.printf("제목 : %s\n", post.getHeadLines());
+            System.out.println("==========");
+        }
+    }
+
+    public void displayPostDetail(Post post) {
+        System.out.println("===========");
+        System.out.println("제목 : " + post.getHeadLines());
+        System.out.println("내용 : " + post.getContents());
+        System.out.println("등록날짜 : " + post.getDate());
+        System.out.println("조회수 : " + post.hit());
+        String likeStatus;
+        if (post.getLikedUsers().contains(loggedInUser)) {
+            likeStatus = "♥ " + post.getLike();
+        } else {
+            likeStatus = "♡ " + post.getLike();
+        }
+        System.out.println("===========");
+        System.out.println("=====댓글=====");
+        for (String reply : post.getReply()) {
+            System.out.println("- " + reply);
+
+        }
+        while (true) {
+            System.out.print("상세보기 기능을 선택해주세요 (1. 댓글 등록, 2. 추천, 3. 수정, 4. 삭제, 5. 목록으로) : ");
+            int detailTarget = Integer.parseInt(sc.nextLine());
+            if (detailTarget == 1) {
+                System.out.print("댓글을 입력해 주세요 : ");
+                String reply = sc.nextLine();
+                post.getReply().add(reply + "                 " + currentDateTime());
+                System.out.println("댓글이 성공적으로 등록되었습니다.");
+
+            } else if (detailTarget == 2) {
+                if (post.getLikedUsers().contains(loggedInUser)) {
+                    post.getLikedUsers().remove(loggedInUser);
+                    System.out.println("해당 게시물의 좋아요를 해제합니다.");
+                } else {
+                    post.getLikedUsers().add(loggedInUser);
+                    System.out.println("해당 게시물을 좋아합니다.");
+                }
+                displayPostDetail(post);
+
+
+            } else if (detailTarget == 3) {
+                if (post.getAuthor() != null && post.getAuthor().equals(loggedInUser)) {
+                    System.out.print("새로운 게시물 제목을 입력해 주세요 : ");
+                    String newheadline = sc.nextLine();
+                    System.out.print("새로운 게시물 내용을 입력해 주세요 : ");
+                    String newcontents = sc.nextLine();
+                    post.setHeadLines(newheadline);
+                    post.setContents(newcontents);
+                    System.out.println("수정이 완료되었습니다.");
+                    displayPostDetail(post);
+                } else {
+                    System.out.println("자신의 게시물만 수정할 수 있습니다.");
+                }
+
+            } else if (detailTarget == 4) {
+                if(post.getAuthor() != null && post.getAuthor().equals(loggedInUser)){
+                    System.out.println("정말 게시물을 삭제하시겠습니까? (y/n) : ");
+                    String comfirmatiom = sc.nextLine();
+                    if(comfirmatiom.equals("y")){
+                        posts.remove(post);
+                        System.out.println(loggedInUser.getNickname() + "님의 " + post.getId()+ "번의 게시물을 삭제했습니다." );
+                        displayPostList();
+
+                    }
+
+                }else {
+                    System.out.println("자신의 게시물만 삭제할 수 있습니다.");
+                }
+
+            } else if (detailTarget == 5) {
+                System.out.println("상세보기 화면을 빠져나갑니다.");
+                break;
+
+            } else {
+                System.out.println("알수 없는 명령어 입니다.");
+                continue;
+            }
+        }
+    }
+
 }
