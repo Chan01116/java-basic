@@ -217,9 +217,6 @@ public class QusetApp {
                         loggedIn = true;
                         break;
                     }
-                    if (!loggedIn) {
-                        System.out.println("비밀번호를 틀렸거나 잘못된 회원정보입니다.");
-                    }
 
                 }
 
@@ -463,10 +460,12 @@ public class QusetApp {
     private void createFileIfNotExists() {
         File postsFile = new File(POSTS_FILE);
         File usersFile = new File(USERS_FILE);
-
         if (!postsFile.exists()) {
+            File parentDir = postsFile.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs(); // 디렉토리 생성
+            }
             try {
-                postsFile.getParentFile().mkdirs(); // 디렉토리 생성
                 postsFile.createNewFile();
                 System.out.println("게시물 데이터 파일이 생성되었습니다.");
             } catch (IOException e) {
@@ -475,8 +474,11 @@ public class QusetApp {
         }
 
         if (!usersFile.exists()) {
+            File parentDir = usersFile.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs(); // 디렉토리 생성
+            }
             try {
-                usersFile.getParentFile().mkdirs(); // 디렉토리 생성
                 usersFile.createNewFile();
                 System.out.println("사용자 데이터 파일이 생성되었습니다.");
             } catch (IOException e) {
