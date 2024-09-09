@@ -15,6 +15,7 @@ public class PostController {
     private BordView bordView = new BordView();
     private CommentRepository commentRepository = new CommentRepository();
     private UserRepository userRepository = new UserRepository();
+    private User loggedIn = null;
     private int lastest = 4;
     private int idCode = 0;
 
@@ -54,8 +55,7 @@ public class PostController {
         if(post == null){
             System.out.println("없는 게시물 번호입니다.");
             return;
-        }
-        post.incHit();
+        }post.incHit();
         System.out.printf("번호 : %d\n", post.getId());
         System.out.printf("제목 : %s\n", post.getHeadLine());
         System.out.printf("내용 : %s\n", post.getBody());
@@ -79,7 +79,17 @@ public class PostController {
                 System.out.println("[추천기능]");
 
             } else if (detailtarget.equals("3")) {
-                System.out.println("[수정기능]");
+                if(loggedIn != null && loggedIn.equals(userRepository.getUser())){
+                    System.out.print("제목 : ");
+                    String newTitle = sc.nextLine();
+                    System.out.println("내용 : ");
+                    String newBody = sc.nextLine();
+                    post.setHeadLine(newTitle);
+                    post.setBody(newBody);
+                    Post newpost = new Post(newTitle, newBody, lastest, currentDateTime(),0);
+                    bordRepository.save(newpost);
+                }else {
+                System.out.println("자신의 게시물만 수정/삭제 할 수있습니다.");}
 
             } else if (detailtarget.equals("4")) {
                 System.out.println("[삭제기능]");
@@ -155,6 +165,7 @@ public class PostController {
         for(User user : userRepository.getUsers()){
             if(logId.equals(user.getID()) && logPass.equals(user.getPassword())){
                 System.out.println(user.getNickname() + "님 환영합니다.");
+                loggedIn = user;
                 login = true;
                 return;
             } else if (!logId.equals(user.getID()) || !logPass.equals(user.getPassword())) {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
-   private String ID;
+    private String ID;
     private String Password;
     private String Nickname;
     private int usernum;

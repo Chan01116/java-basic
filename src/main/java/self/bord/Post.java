@@ -1,11 +1,14 @@
 package self.bord;
 
+import quest.User;
+
 public class Post {
    private String headLine;
     private String body;
     private int id;
     private String currentDateTime;
     private int hit;
+    private User user;
 
     public Post(String headLine, String body, int id, String currentDateTime, int hit) {
         this.headLine = headLine;
@@ -13,6 +16,15 @@ public class Post {
         this.id = id;
         this.currentDateTime = currentDateTime;
         this.hit = hit;
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void incHit(){

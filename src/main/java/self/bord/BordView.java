@@ -13,12 +13,12 @@ public class BordView {
         }
     }
     public void detailPostList(Post post){
-        System.out.println("===========");
+        post.incHit();
         System.out.printf("번호 : %d\n", post.getId());
         System.out.printf("제목 : %s\n", post.getHeadLine());
         System.out.printf("내용 : %s\n", post.getBody());
-        System.out.printf("등록날짜 : %s\n", post.getCurrentDateTime());
+        System.out.printf("작성일 : %s\n" , post.getCurrentDateTime());
         System.out.printf("조회수 : %d\n" ,post.getHit());
-        System.out.println("===========");
+        System.out.println("====== 댓글 ======");
     }
 }
