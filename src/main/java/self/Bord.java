@@ -1,7 +1,6 @@
 package self;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import self.bord.BordApp;
 
 public class Bord {
     public static void main(String[] args) {

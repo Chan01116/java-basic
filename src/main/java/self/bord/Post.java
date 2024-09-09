@@ -1,4 +1,4 @@
-package self;
+package self.bord;
 
 public class Post {
    private String headLine;
@@ -14,6 +14,7 @@ public class Post {
         this.currentDateTime = currentDateTime;
         this.hit = hit;
     }
+
     public void incHit(){
         this.hit++;
     }

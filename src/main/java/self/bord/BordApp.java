@@ -1,8 +1,5 @@
-package self;
+package self.bord;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BordApp {
@@ -28,6 +25,10 @@ public class BordApp {
                 postController.detail();
             } else if (command.equals("search")) {
                 postController.search();
+            }else if (command.equals("signup")){
+                postController.signup();
+            } else if (command.equals("login")) {
+                postController.login();
             }
 
         }

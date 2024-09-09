@@ -1,4 +1,4 @@
-package self;
+package self.bord;
 
 import java.util.ArrayList;
 
