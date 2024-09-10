@@ -1,18 +1,19 @@
 package testFile;
 
+import testFile.post.Post;
 import testFile.post.PostController;
 import testFile.post.PostRepository;
 
 import java.util.Scanner;
 
 public class Test {
-    public void run() {
-        Scanner sc = new Scanner(System.in);
-        PostController postController = new PostController();
-        while (true) {
+    private Scanner sc = new Scanner(System.in);
+    private PostController postController = new PostController();
+    public void run(){
+        while (true){
             System.out.print("명령어를 입력해주세요 : ");
             String command = sc.nextLine();
-            if (command.equals("exit")) {
+            if(command.equals("exit")){
                 break;
             } else if (command.equals("add")) {
                 postController.add();
@@ -24,8 +25,9 @@ public class Test {
                 postController.delete();
             } else if (command.equals("detail")) {
                 postController.detail();
+            } else if (command.equals("search")) {
+                postController.search();
             }
         }
     }
-
 }
