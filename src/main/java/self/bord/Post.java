@@ -3,7 +3,7 @@ package self.bord;
 import quest.User;
 
 public class Post {
-   private String headLine;
+    private String headLine;
     private String body;
     private int id;
     private String currentDateTime;
