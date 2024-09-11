@@ -3,35 +3,19 @@ package testFile.post;
 public class Post {
     private String title;
     private String body;
-    private int id;
     private String date;
+    private int id;
     private int hits;
 
-    public Post(String title, String body, int id, String date, int hits) {
+    public Post(String title, String body, String date, int id, int hits) {
         this.title = title;
         this.body = body;
+        this.date = date;
         this.id = id;
-        this.date = date;
         this.hits = hits;
     }
-    public void incHits(){
+    public void increaseHit(){
         this.hits++;
-    }
-
-    public int getHits() {
-        return hits;
-    }
-
-    public void setHits(int hits) {
-        this.hits = hits;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getTitle() {
@@ -50,11 +34,27 @@ public class Post {
         this.body = body;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getHits() {
+        return hits;
+    }
+
+    public void setHits(int hits) {
+        this.hits = hits;
     }
 }
